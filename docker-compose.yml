@@ -1,0 +1,35 @@
+version: '2' # specify docker-compose version
+
+# Define the services/containers to be run
+services:
+  
+  client: # name of the first service
+    build: ./ionic-client # specify the directory of the Dockerfile
+    volumes:
+      # mounts local source code to container
+      - ./ionic-client:/usr/src/app
+      # mounts node modules to container
+      - ./ionic-client/node_modules
+    ports:
+      - "8100:8100" # specify port forwarding
+      #- "8200:8200" # specify port forwarding - Lab
+      - "4200:4200" # specify port forwarding
+    #command: ionic serve --address 0.0.0.0 --port 8100
+
+
+  server: #name of the second service
+    build: ./ionic-server # specify the directory of the Dockerfile
+    volumes:
+      # mounts local source code to container
+      - ./ionic-server:/usr/src/app
+      # mounts node modules to container
+      - ./ionic-server/node_modules
+    ports:
+      - "3000:3000" #specify ports forwarding
+    links:
+      - database # link this service to the database service
+
+  database: # name of the third service
+    image: mongo # specify image to build container from
+    ports:
+      - "27017:27017" # specify port forwarding
